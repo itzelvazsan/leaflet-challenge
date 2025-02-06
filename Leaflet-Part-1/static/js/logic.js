@@ -1,22 +1,42 @@
 // Create the 'basemap' tile layer that will be the background of our map.
-
+let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+});
 
 // OPTIONAL: Step 2
 // Create the 'street' tile layer as a second background of the map
+let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+})
+
+let overlayMaps = {
+  Earthquakes: earthquakes
+};
 
 
 // Create the map object with center and zoom options.
+let baseMaps = {
+  Street: street,
+  Topography: topo
+};
 
+let myMap = L.map("map", {
+  center: [37.77493, -122.41942],
+  zoom: 5,
+  layers: [street, eartquakes]
+});
 
 // Then add the 'basemap' tile layer to the map.
+L.control.layers(baseMaps, overlayMaps, {
+  collapsed: false
+}).addTo(myMap);
 
 // OPTIONAL: Step 2
 // Create the layer groups, base maps, and overlays for our two sets of data, earthquakes and tectonic_plates.
 // Add a control to the map that will allow the user to change which layers are visible.
 
-
 // Make a request that retrieves the earthquake geoJSON data.
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function (data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson").then(function (data) {
 
   // This function returns the style data for each of the earthquakes we plot on
   // the map. Pass the magnitude and depth of the earthquake into two separate functions
@@ -27,7 +47,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
 
   // This function determines the color of the marker based on the depth of the earthquake.
   function getColor(depth) {
-
+        geometry.coordinates.depth
   }
 
   // This function determines the radius of the earthquake marker based on its magnitude.
@@ -72,13 +92,5 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   // Finally, add the legend to the map.
 
 
-  // OPTIONAL: Step 2
-  // Make a request to get our Tectonic Plate geoJSON data.
-  d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json").then(function (plate_data) {
-    // Save the geoJSON data, along with style information, to the tectonic_plates layer.
 
-
-    // Then add the tectonic_plates layer to the map.
-
-  });
 });
